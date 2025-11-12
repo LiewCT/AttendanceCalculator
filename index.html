@@ -4,75 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Attendance Rate Calculator</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#007bff">
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f5f7fa;
-    margin: 0;
-    padding: 20px;
-}
-.container {
-    max-width: 600px;
-    background: #ffffff;
-    margin: 0 auto;
-    padding: 25px 30px;
-    border-radius: 12px;
-    box-shadow: 0 0 12px rgba(0,0,0,0.1);
-}
-h2 {
-    text-align: center;
-    color: #333;
-}
-label {
-    display: block;
-    margin-top: 15px;
-    font-weight: bold;
-}
-select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 15px;
-}
-.semester-buttons {
-    margin-top: 15px;
-    display: flex;
-    gap: 10px;
-}
-button.sem-btn {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
-    background: #007bff;
-    color: white;
-    font-size: 15px;
-    cursor: pointer;
-}
-button.sem-btn.active {
-    background: #0056b3;
-}
-.output {
-    margin-top: 25px;
-    background: #f3f7ff;
-    padding: 15px;
-    border-radius: 8px;
-    border: 1px solid #cdddf5;
-}
-.output p {
-    font-size: 16px;
-    margin: 8px 0;
-    color: #333;
-}
-.rate {
-    font-weight: bold;
-    color: #007bff;
-}
-.rate.low {
-    color: red;
-}
+body { font-family: Arial, sans-serif; background: #f5f7fa; margin: 0; padding: 20px; }
+.container { max-width: 600px; background: #fff; margin: 0 auto; padding: 25px 30px; border-radius: 12px; box-shadow: 0 0 12px rgba(0,0,0,0.1); }
+h2 { text-align: center; color: #333; }
+label { display: block; margin-top: 15px; font-weight: bold; }
+select { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; }
+.semester-buttons { margin-top: 15px; display: flex; gap: 10px; }
+button.sem-btn { flex: 1; padding: 10px; border: none; border-radius: 6px; background: #007bff; color: white; font-size: 15px; cursor: pointer; }
+button.sem-btn.active { background: #0056b3; }
+.output { margin-top: 25px; background: #f3f7ff; padding: 15px; border-radius: 8px; border: 1px solid #cdddf5; }
+.output p { font-size: 16px; margin: 8px 0; color: #333; }
+.rate { font-weight: bold; color: #007bff; }
+.rate.low { color: red; }
+#installBtn, #downloadApp { padding:10px 20px; font-size:16px; border:none; border-radius:6px; cursor:pointer; display:block; margin:10px auto; text-align:center; text-decoration:none; }
+#installBtn { background:#28a745; color:white; }
+#installBtn:hover { background:#218838; }
+#downloadApp { background:#007bff; color:white; }
+#downloadApp:hover { background:#0056b3; }
+#installInfo, #iosInfo { text-align:center; font-size:14px; color:#555; margin-top:5px; }
 </style>
 </head>
 <body>
@@ -80,143 +32,156 @@ button.sem-btn.active {
 <div class="container">
 <h2>Attendance Rate Calculator</h2>
 
+<!-- Install button -->
+<button id="installBtn">Install App</button>
+<p id="installInfo"></p>
+
+<!-- Download APK -->
+<a id="downloadApp" href="attendance-calculator.apk" download>Download Android App</a>
+<p id="iosInfo"></p>
+
 <label>Lecture hours per week:</label>
 <select id="lecture">
-    <option value="0">0</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
+  <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+  <option value="4">4</option><option value="5">5</option>
 </select>
 
 <label>Practical hours per week:</label>
 <select id="practical">
-    <option value="0">0</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
+  <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+  <option value="4">4</option><option value="5">5</option>
 </select>
 
 <label>Tutorial hours per week:</label>
 <select id="tutorial">
-    <option value="0">0</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
+  <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+  <option value="4">4</option><option value="5">5</option>
 </select>
 
 <label>Absent hours:</label>
 <select id="absent">
-    <!-- Options 0 to 30 -->
-    <script>
-        for(let i=0; i<=30; i++){
-            document.write(`<option value="${i}">${i}</option>`);
-        }
-    </script>
+  <script>
+    for(let i=0;i<=30;i++){document.write(`<option value="${i}">${i}</option>`);}
+  </script>
 </select>
 
 <label>Semester duration:</label>
 <div class="semester-buttons">
-    <button class="sem-btn" id="short">Short (7 weeks)</button>
-    <button class="sem-btn" id="long">Long (14 weeks)</button>
+  <button class="sem-btn" id="short">Short (7 weeks)</button>
+  <button class="sem-btn" id="long">Long (14 weeks)</button>
 </div>
 
 <div class="output">
-    <p>Total Hours per Week: <span id="totalPerWeek">0</span></p>
-    <p>Total Hour: <span id="totalHour">0</span></p>
-    <p>Total Bar Hour: <span id="barHour">0</span></p>
-    <p>Attend Hours: <span id="attendHour">0</span></p>
-    <p>Attend Bar Hours: <span id="attendBarHour">0</span></p>
-    <hr>
-    <p>Bar Rate (BR): <span id="barRate" class="rate">0%</span></p>
-    <p>Total Rate (TR): <span id="totalRate" class="rate">0%</span></p>
+  <p>Total Hours per Week: <span id="totalPerWeek">0</span></p>
+  <p>Total Hour: <span id="totalHour">0</span></p>
+  <p>Total Bar Hour: <span id="barHour">0</span></p>
+  <p>Attend Hours: <span id="attendHour">0</span></p>
+  <p>Attend Bar Hours: <span id="attendBarHour">0</span></p>
+  <hr>
+  <p>Bar Rate (BR): <span id="barRate" class="rate">0%</span></p>
+  <p>Total Rate (TR): <span id="totalRate" class="rate">0%</span></p>
 </div>
 </div>
 
 <script>
-const lecture = document.getElementById('lecture');
-const practical = document.getElementById('practical');
-const tutorial = document.getElementById('tutorial');
-const absent = document.getElementById('absent');
-const totalPerWeek = document.getElementById('totalPerWeek');
-const totalHour = document.getElementById('totalHour');
-const barHour = document.getElementById('barHour');
-const attendHour = document.getElementById('attendHour');
-const attendBarHour = document.getElementById('attendBarHour');
-const barRate = document.getElementById('barRate');
-const totalRate = document.getElementById('totalRate');
-const shortBtn = document.getElementById('short');
-const longBtn = document.getElementById('long');
+const lecture=document.getElementById('lecture');
+const practical=document.getElementById('practical');
+const tutorial=document.getElementById('tutorial');
+const absent=document.getElementById('absent');
+const totalPerWeek=document.getElementById('totalPerWeek');
+const totalHour=document.getElementById('totalHour');
+const barHour=document.getElementById('barHour');
+const attendHour=document.getElementById('attendHour');
+const attendBarHour=document.getElementById('attendBarHour');
+const barRate=document.getElementById('barRate');
+const totalRate=document.getElementById('totalRate');
+const shortBtn=document.getElementById('short');
+const longBtn=document.getElementById('long');
 
-let semDuration = 0;
+let semDuration=0;
+let userSelectedAbsent=false;
 
-function updateActiveButton(selected) {
-    [shortBtn, longBtn].forEach(btn => btn.classList.remove('active'));
+function updateActiveButton(selected){
+    [shortBtn,longBtn].forEach(btn=>btn.classList.remove('active'));
     selected.classList.add('active');
 }
 
-shortBtn.addEventListener('click', () => {
-    semDuration = 7;
-    updateActiveButton(shortBtn);
-    calculate();
-});
-longBtn.addEventListener('click', () => {
-    semDuration = 14;
-    updateActiveButton(longBtn);
-    calculate();
-});
+shortBtn.addEventListener('click',()=>{semDuration=7; updateActiveButton(shortBtn); calculate();});
+longBtn.addEventListener('click',()=>{semDuration=14; updateActiveButton(longBtn); calculate();});
 
-[lecture, practical, tutorial, absent].forEach(input => {
-    input.addEventListener('change', calculate);
-});
-let userSelectedAbsent = false; // tracks if user manually selected absent
-
-absent.addEventListener('change', () => {
-    userSelectedAbsent = true; // user selected a value, stop autofill
-    calculate();
+[lecture, practical, tutorial, absent].forEach(input=>{
+    input.addEventListener('change',()=>{
+        if(input===absent) userSelectedAbsent=true;
+        calculate();
+    });
 });
 
-function calculate() {
-    const L = parseInt(lecture.value) || 0;
-    const P = parseInt(practical.value) || 0;
-    const T = parseInt(tutorial.value) || 0;
-    const W = semDuration;
-    if (W === 0) return;
+function calculate(){
+    const L=parseInt(lecture.value)||0;
+    const P=parseInt(practical.value)||0;
+    const T=parseInt(tutorial.value)||0;
+    const W=semDuration;
+    if(W===0) return;
 
-    const totalPerWeekVal = L + P + T;
-    const totalHourVal = totalPerWeekVal * W;
-    const totalBarHourVal = totalPerWeekVal * (W - 2);
+    const totalPerWeekVal=L+P+T;
+    const totalHourVal=totalPerWeekVal*W;
+    const totalBarHourVal=totalPerWeekVal*(W-2);
 
-    // Autofill absent only if user hasn't manually chosen
-    if (!userSelectedAbsent) {
-        const mostAbsent = Math.round(totalBarHourVal * 0.2); // nearest integer
-        absent.value = mostAbsent <= 30 ? mostAbsent : 30;
+    if(!userSelectedAbsent){
+        const mostAbsent=Math.round(totalBarHourVal*0.2);
+        absent.value=mostAbsent<=30?mostAbsent:30;
     }
 
-    const A = parseInt(absent.value) || 0;
-    const attendHourVal = totalHourVal - A;
-    const attendBarHourVal = totalBarHourVal - A;
+    const A=parseInt(absent.value)||0;
+    const attendHourVal=totalHourVal-A;
+    const attendBarHourVal=totalBarHourVal-A;
 
-    const BR = totalBarHourVal > 0 ? (attendBarHourVal / totalBarHourVal) * 100 : 0;
-    const TR = totalHourVal > 0 ? (attendHourVal / totalHourVal) * 100 : 0;
+    const BR=totalBarHourVal>0?(attendBarHourVal/totalBarHourVal*100):0;
+    const TR=totalHourVal>0?(attendHourVal/totalHourVal*100):0;
 
-    totalPerWeek.textContent = totalPerWeekVal;
-    totalHour.textContent = totalHourVal;
-    barHour.textContent = totalBarHourVal;
-    attendHour.textContent = attendHourVal;
-    attendBarHour.textContent = attendBarHourVal;
-    barRate.textContent = BR.toFixed(2) + '%';
-    totalRate.textContent = TR.toFixed(2) + '%';
-
-    if(BR < 80) barRate.classList.add('low');
-    else barRate.classList.remove('low');
+    totalPerWeek.textContent=totalPerWeekVal;
+    totalHour.textContent=totalHourVal;
+    barHour.textContent=totalBarHourVal;
+    attendHour.textContent=attendHourVal;
+    attendBarHour.textContent=attendBarHourVal;
+    barRate.textContent=BR.toFixed(2)+'%';
+    totalRate.textContent=TR.toFixed(2)+'%';
+    if(BR<80) barRate.classList.add('low'); else barRate.classList.remove('low');
 }
 
+// PWA install button
+let deferredPrompt;
+const installBtn=document.getElementById('installBtn');
+const installInfo=document.getElementById('installInfo');
+
+window.addEventListener('beforeinstallprompt',(e)=>{
+    e.preventDefault();
+    deferredPrompt=e;
+    installBtn.style.display='inline-block';
+    installInfo.textContent="You can install this app on your device.";
+});
+
+installBtn.addEventListener('click',async()=>{
+    if(deferredPrompt){
+        deferredPrompt.prompt();
+        deferredPrompt=null;
+        installBtn.style.display='none';
+        installInfo.textContent='';
+    }
+});
+
+// iOS instructions
+const iosInfo=document.getElementById('iosInfo');
+if(/iPhone|iPad|iPod/i.test(navigator.userAgent)){
+    installBtn.style.display='none';
+    iosInfo.textContent="iOS users: Tap 'Share' → 'Add to Home Screen' to install the app.";
+    document.getElementById('downloadApp').style.display='none';
+}
+
+// register service worker
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('service-worker.js').then(()=>console.log('Service Worker registered'));
+}
 </script>
 
 </body>
