@@ -153,30 +153,61 @@ button.sem-btn.active {
 </div>
 
 <script>
-    // Install button logic
 let deferredPrompt;
 const installBtn = document.getElementById('installBtn');
 
+// Always show button
+installBtn.style.display = 'block';
+
+// Detect if app is already installed or running standalone
+function checkInstallStatus() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                    || window.navigator.standalone === true;
+  if (isStandalone) {
+    installBtn.textContent = 'Installed ✅';
+    installBtn.disabled = true;
+  } else {
+    installBtn.textContent = 'Install App';
+    installBtn.disabled = false;
+  }
+}
+
+// Run check on page load
+checkInstallStatus();
+
+// Listen for install prompt availability
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  installBtn.style.display = 'block';
-  console.log('Install prompt available');
+  console.log('✅ Install prompt is available');
+  installBtn.textContent = 'Install App';
 });
 
+// Handle click
 installBtn.addEventListener('click', async () => {
-  installBtn.style.display = 'none';
-  deferredPrompt.prompt();
-  const { outcome } = await deferredPrompt.userChoice;
-  console.log(`User response: ${outcome}`);
-  deferredPrompt = null;
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`User response: ${outcome}`);
+    deferredPrompt = null;
+    if (outcome === 'accepted') {
+      installBtn.textContent = 'Installed ✅';
+      installBtn.disabled = true;
+    }
+  } else {
+    alert('App not ready to install yet or already installed.');
+  }
 });
 
+// When installed
 window.addEventListener('appinstalled', () => {
-  console.log('✅ App installed');
-  installBtn.style.display = 'none';
+  console.log('🎉 App successfully installed');
+  installBtn.textContent = 'Installed ✅';
+  installBtn.disabled = true;
 });
 
+// Check again on visibility change (e.g., after uninstall)
+document.addEventListener('visibilitychange', checkInstallStatus);
 const lecture = document.getElementById('lecture');
 const practical = document.getElementById('practical');
 const tutorial = document.getElementById('tutorial');
