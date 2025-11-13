@@ -153,61 +153,65 @@ button.sem-btn.active {
 </div>
 
 <script>
+    // -------------------- PWA Setup --------------------
+
+// Register service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js')
+    .then(() => console.log('✅ Service Worker registered'))
+    .catch(err => console.log('❌ SW registration failed:', err));
+}
 let deferredPrompt;
 const installBtn = document.getElementById('installBtn');
 
 // Always show button
 installBtn.style.display = 'block';
+installBtn.textContent = 'Install App';
 
-// Detect if app is already installed or running standalone
-function checkInstallStatus() {
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-                    || window.navigator.standalone === true;
-  if (isStandalone) {
-    installBtn.textContent = 'Installed ✅';
-    installBtn.disabled = true;
-  } else {
-    installBtn.textContent = 'Install App';
-    installBtn.disabled = false;
-  }
-}
-
-// Run check on page load
-checkInstallStatus();
+console.log('🟢 PWA install button script loaded');
 
 // Listen for install prompt availability
 window.addEventListener('beforeinstallprompt', (e) => {
+  console.log('📥 beforeinstallprompt fired');
   e.preventDefault();
   deferredPrompt = e;
-  console.log('✅ Install prompt is available');
-  installBtn.textContent = 'Install App';
+  console.log('✅ Install prompt captured and ready to use');
 });
 
-// Handle click
+// Handle click → always try to install
 installBtn.addEventListener('click', async () => {
+  console.log('🖱️ Install button clicked');
+  
   if (deferredPrompt) {
+    console.log('📦 Showing install prompt...');
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    console.log(`User response: ${outcome}`);
-    deferredPrompt = null;
+    console.log(`📊 User response: ${outcome}`);
+    
     if (outcome === 'accepted') {
-      installBtn.textContent = 'Installed ✅';
-      installBtn.disabled = true;
+      console.log('🎉 User accepted installation');
+    } else {
+      console.log('❌ User dismissed installation');
     }
+    
+    deferredPrompt = null;
   } else {
-    alert('App not ready to install yet or already installed.');
+    console.log('⚠️ No install prompt available right now');
+    alert('App not ready to install yet. Please refresh or check manifest/service worker.');
   }
 });
 
-// When installed
+// When successfully installed
 window.addEventListener('appinstalled', () => {
-  console.log('🎉 App successfully installed');
-  installBtn.textContent = 'Installed ✅';
-  installBtn.disabled = true;
+  console.log('🏁 App successfully installed!');
 });
 
-// Check again on visibility change (e.g., after uninstall)
-document.addEventListener('visibilitychange', checkInstallStatus);
+
+// Log when installed
+window.addEventListener('appinstalled', () => {
+  console.log('🎉 App successfully installed');
+});
+
 const lecture = document.getElementById('lecture');
 const practical = document.getElementById('practical');
 const tutorial = document.getElementById('tutorial');
@@ -276,14 +280,7 @@ function calculate() {
         barRate.classList.remove('low');
     }
 }
-// -------------------- PWA Setup --------------------
 
-// Register service worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js')
-    .then(() => console.log('✅ Service Worker registered'))
-    .catch(err => console.log('❌ SW registration failed:', err));
-}
 
 </script>
 

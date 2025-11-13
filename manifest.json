@@ -2,7 +2,7 @@
   "name": "Attendance Calculator",
   "short_name": "AttendCalc",
   "start_url": "./index.html",
-  "display": "standalone",
+  "display": "fullscreen",
   "background_color": "#f5f7fa",
     "theme_color": "#007bff",
     "icons": [
